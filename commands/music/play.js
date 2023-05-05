@@ -11,34 +11,41 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        const { options, member, guild, channel } = interaction;
-
-        const query = options.getString("query");
-        const voiceChannel = member.voice.channel;
-
-        const embed = new EmbedBuilder();
-
-        if (!voiceChannel) {
-            embed.setColor("Red").setDescription("You must be in a voice channel to execute music commands.");
-            return interaction.reply({ embeds: [embed], ephemeral: true });
-        }
-
-        if (!member.voice.channelId == guild.members.me.voice.channelId) {
-            embed.setColor("Red").setDescription(`You can't use the music player as it is already active in <#${guild.members.me.voice.channelId}>`);
-            return interaction.reply({ embeds: [embed], ephemeral: true });
-        }
-
         try {
+            const { options, member, guild, channel } = interaction;
 
-            client.distube.play(voiceChannel, query, { textChannel: channel, member: member });
-            return interaction.reply({ content: "🎶 Request received." });
+            const query = options.getString("query");
+            const voiceChannel = member.voice.channel;
 
-        } catch (err) {
+            const embed = new EmbedBuilder();
+
+            if (!voiceChannel) {
+                embed.setColor("Red").setDescription("You must be in a voice channel to execute music commands.");
+                return interaction.reply({ embeds: [embed], ephemeral: true });
+            }
+
+            if (!member.voice.channelId == guild.members.me.voice.channelId) {
+                embed.setColor("Red").setDescription(`You can't use the music player as it is already active in <#${guild.members.me.voice.channelId}>`);
+                return interaction.reply({ embeds: [embed], ephemeral: true });
+            }
+
+            try {
+
+                client.distube.play(voiceChannel, query, { textChannel: channel, member: member });
+                return interaction.reply({ content: "🎶 Request received." });
+
+            } catch (err) {
+                console.log(err);
+                embed.setColor("Red").setDescription("⛔ | Something went wrong...");
+
+                return interaction.reply({ embeds: [embed], ephemeral: true });
+            }
+        } catch (error) {
             console.log(err);
-
             embed.setColor("Red").setDescription("⛔ | Something went wrong...");
 
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
+        
     }
 }
