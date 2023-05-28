@@ -4,15 +4,18 @@ const filter = (reaction, user) => {
 	return ['❤️', '🧡', '🛑'].includes(reaction.emoji.name)
 };
 
-function createRecruitParty(date, time) {
+function createRecruitParty(date, time, text) {
     const embed = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('**`[크롬바스 100 파티원 구인]`**')
         .setDescription(`**일시 : ${date} ${time}**`)
         .addFields({
 			name: '실린더 에르그 45 이상 / 주딜 맥 1350이상',
-			value: '\u200B'
+			value: `\n`
 		}, {
+            name: `${text}`,
+			value: `\u200B`
+        }, {
             name: '**`세인트 바드`**',
             value: '50레벨 ⬆️',
             inline: true
@@ -116,14 +119,16 @@ module.exports = {
         .setName('크롬100')
         .addStringOption(option => option.setName('날짜').setDescription('파티 출발 일자'))
         .addStringOption(option => option.setName('시간').setDescription('파티 출발 시간'))
+        .addStringOption(option => option.setName('메모').setDescription('코멘트'))
         .setDescription('크롬바스 100 파티원 구인'),
         
     async execute(interaction) {
         const date = interaction.options.getString('날짜') ?? '상호협의';
         const time = interaction.options.getString('시간') ?? '상호협의';
+        const comment = interaction.options.getString('메모') ?? '\u200B';
 
         await interaction
-            .reply({embeds: [createRecruitParty(date, time)], fetchReply: true})
+            .reply({embeds: [createRecruitParty(date, time, comment)], fetchReply: true})
             .then((message) => {
                 message.react('❤️').then(() => message.react('🧡')).then(() => message.react('🛑'));
                 createCollector(message, interaction);

@@ -4,7 +4,7 @@ const filter = (reaction, user) => {
 	return ['❤️', '🧡', '🛑'].includes(reaction.emoji.name)
 };
 
-function createRecruitParty(date, time, boss) {
+function createRecruitParty(date, time, boss, text) {
     const embed = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('**`[아발론 정화 파티원 구인]`**')
@@ -22,8 +22,11 @@ function createRecruitParty(date, time, boss) {
             name: '**`서포터 모집 조건`**',
             value: '서포트샷 세트 보유',
             inline: true
-        },)
-        .setFooter({text: '참여는 아래 ❤를 눌러주세요 [선착순 반영]'});
+        }, {
+            name: `\u200B`,
+			value: `${text}`
+        }, 
+        ).setFooter({text: '참여는 아래 ❤를 눌러주세요 [선착순 반영]'});
 
     return embed;
 }
@@ -109,17 +112,18 @@ module.exports = {
 				{ name: '티아가', value: '티아가' },
 				{ name: '아켈론', value: '아켈론' },
 				{ name: '크리그', value: '크리그' },
-			)
-		)
+			))
+        .addStringOption(option => option.setName('메모').setDescription('코멘트'))
         .setDescription('정화 파티원 구인'),
         
     async execute(interaction) {
         const date = interaction.options.getString('날짜') ?? '상호협의';
         const time = interaction.options.getString('시간') ?? '상호협의';
         const boss = interaction.options.getString('보스') ?? '상호협의';
+        const comment = interaction.options.getString('메모') ?? '\u200B';
 
         await interaction
-            .reply({embeds: [createRecruitParty(date, time, boss)], fetchReply: true})
+            .reply({embeds: [createRecruitParty(date, time, boss, comment)], fetchReply: true})
             .then((message) => {
                 message.react('❤️').then(() => message.react('🧡')).then(() => message.react('🛑'));
                 createCollector(message, interaction);

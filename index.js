@@ -15,6 +15,7 @@ const client = new Client({
 
 client.distube = new DisTube(client, {
     emitNewSongOnly: true,
+    nsfw: true,
     leaveOnFinish: true, // you can change this to your needs
     emitAddSongWhenCreatingQueue: false,
     plugins: [new SpotifyPlugin(), new DeezerPlugin({ parallel: true })]

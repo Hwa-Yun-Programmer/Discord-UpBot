@@ -4,10 +4,10 @@ const client = require("../../index");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("loop")
-        .setDescription("Display loop options.")
+        .setDescription("반복 재생 설정")
         .addStringOption(option =>
             option.setName("options")
-                .setDescription("Loop options: off, song, queue")
+                .setDescription("반복 설정: off, song, queue")
                 .addChoices(
                     { name: "off", value: "off" },
                     { name: "song", value: "song" },
@@ -23,12 +23,12 @@ module.exports = {
         const embed = new EmbedBuilder();
 
         if (!voiceChannel) {
-            embed.setColor("Red").setDescription("You must be in a voice channel to execute music commands.");
+            embed.setColor("Red").setDescription("이 명령어를 사용할려면 음성채널에 먼저 들어와야합니다.");
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
         if (!member.voice.channelId == guild.members.me.voice.channelId) {
-            embed.setColor("Red").setDescription(`You can't use the music player as it is already active in <#${guild.members.me.voice.channelId}>`);
+            embed.setColor("Red").setDescription(`다른 채널에서 이미 사용중입니다. <#${guild.members.me.voice.channelId}>`);
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
@@ -36,7 +36,7 @@ module.exports = {
             const queue = await client.distube.getQueue(voiceChannel);
 
             if (!queue) {
-                embed.setColor("Red").setDescription("There is no active queue.");
+                embed.setColor("Red").setDescription("대기중인 재생목록이 없습니다.");
                 return interaction.reply({ embeds: [embed], ephemeral: true });
             }
 
@@ -56,14 +56,14 @@ module.exports = {
 
             mode = await queue.setRepeatMode(mode);
 
-            mode = mode ? (mode === 2 ? "Repeat queue" : "Repeat song") : "Off";
+            mode = mode ? (mode === 2 ? "재생목록 반복" : "노래 반복") : "끄기";
 
-            embed.setColor("Orange").setDescription(`🔁 Set repeat mode to \`${mode}\`.`);
+            embed.setColor("Orange").setDescription(`🔁 반복재생 설정을 \`${mode}\`로 변경하였습니다.`);
             return interaction.reply({ embeds: [embed], ephemeral: true });
         } catch (err) {
             console.log(err);
 
-            embed.setColor("Red").setDescription("⛔ | Something went wrong...");
+            embed.setColor("Red").setDescription("⛔ | 먼가.. 잘못됬는데..?");
 
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }

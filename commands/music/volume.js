@@ -4,7 +4,7 @@ const client = require("../../index");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("volume")
-        .setDescription("Adjust the player's volume.")
+        .setDescription("노래봇 볼륨 조절")
         .addIntegerOption(option =>
             option.setName("volume")
                 .setDescription("10 = 10%")
@@ -20,24 +20,24 @@ module.exports = {
         const embed = new EmbedBuilder();
 
         if (!voiceChannel) {
-            embed.setColor("Red").setDescription("You must be in a voice channel to execute music commands.");
+            embed.setColor("Red").setDescription("이 명령어를 사용할려면 음성채널에 먼저 들어와야합니다.");
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
         if (!member.voice.channelId == guild.members.me.voice.channelId) {
-            embed.setColor("Red").setDescription(`You can't use the music player as it is already active in <#${guild.members.me.voice.channelId}>`);
+            embed.setColor("Red").setDescription(`다른 채널에서 이미 사용중입니다. <#${guild.members.me.voice.channelId}>`);
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
         try {
 
             client.distube.setVolume(voiceChannel, volume);
-            return interaction.reply({ content: `🔉 Volume has been set to ${volume}%.` });
+            return interaction.reply({ content: `🔉 볼륨을 ${volume}%로 설정했습니다.` });
 
         } catch (err) {
             console.log(err);
 
-            embed.setColor("Red").setDescription("⛔ | Something went wrong...");
+            embed.setColor("Red").setDescription("⛔ | 먼가.. 잘못됬는데..?");
 
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }

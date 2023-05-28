@@ -1,10 +1,10 @@
 const {SlashCommandBuilder, InteractionResponse, EmbedBuilder} = require('discord.js');
 
 const filter = (reaction, user) => {
-	return ['🔴', '🔵', '🛑'].includes(reaction.emoji.name)
+	return ['❤️', '🧡', '🛑'].includes(reaction.emoji.name)
 };
 
-function createRecruitParty(date, time) {
+function createRecruitParty(date, time, text) {
     const embed = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('**`[글렌베르나 어려움 파티원 구인]`**')
@@ -12,7 +12,10 @@ function createRecruitParty(date, time) {
         .addFields(
 			{
 				name : ' 🔹 부족한 인원은 따로 모집할 예정입니다. \n🔹 길드원들은 키 있는 인원들끼리 억분 , 지인/공팟은 3억 이상 분배 \n🔹 8억 이상 먹을 시, 키 없는 인원들 2천숲씩 뽀찌지급 \n🔹 엘나, 바드 인원 비율 상관없이 신청부탁드립니다.',
-				value : '\u200B'
+				value : '\n'
+			}, {
+				name: `${text}`,
+				value: `\u200B`
 			}, {
 				name : '\u200B',
 				value : '**` 🧡 바드 스펙 조건`**'
@@ -82,21 +85,22 @@ function createCollector(message, interaction) {
                     support.push(user.id);
                     break;
 
-                case '🛑':
-                    if(user.tag === interaction.user.tag) {
-                        var attackers = '';
-                        attack.forEach((item) => {
-                            attackers += `<@${item}> `
-                        });
-                        var supporters = '';
-                        support.forEach((item) => {
-                            supporters += `<@${item}> `
-                        });
-        
-                        interaction.followUp({content : `파티원 : ${attackers} \n홀샷러 : ${supporters}`, embeds: [createFinishParty()]});
-                        collector.stop();
-                    }
-                    break;
+				case '🛑':
+					if(user.tag === interaction.user.tag) {
+						var attackers = '';
+						attack.forEach((item) => {
+							attackers += `<@${item}> `
+						});
+						var supporters = '';
+						support.forEach((item) => {
+							supporters += `<@${item}> `
+						});
+			
+						interaction.followUp({content : `엘나 : ${attackers} \n세바 : ${supporters}`, embeds: [createFinishParty()]});
+						collector.stop();
+					}
+					break;
+	
 
             }
     	}
@@ -128,17 +132,20 @@ module.exports = {
         .setName('글렌어려움')
         .addStringOption(option => option.setName('날짜').setDescription('파티 출발 일자'))
         .addStringOption(option => option.setName('시간').setDescription('파티 출발 시간'))
+		.addStringOption(option => option.setName('메모').setDescription('코멘트'))
         .setDescription('글렌베르나 어려움 파티원 구인'),
         
     async execute(interaction) {
         const date = interaction.options.getString('날짜') ?? '상호협의';
         const time = interaction.options.getString('시간') ?? '상호협의';
+		const comment = interaction.options.getString('메모') ?? '\u200B';
 
         await interaction
-            .reply({embeds: [createRecruitParty(date, time)], fetchReply: true})
+            .reply({embeds: [createRecruitParty(date, time, comment)], fetchReply: true})
             .then((message) => {
-                message.react('❤️').then(() => message.react('🧡'));
+                message.react('❤️').then(() => message.react('🧡')).then(() => message.react('🛑'));
                 createCollector(message, interaction);
+				interaction.followUp('<@&1107301623216226304>');
             })
         
     }
