@@ -1,4 +1,4 @@
-const {SlashCommandBuilder, InteractionResponse, EmbedBuilder} = require('discord.js');
+const {SlashCommandBuilder, EmbedBuilder} = require('discord.js');
 
 const filter = (reaction, user) => {
 	return ['❤️', '🧡', '🛑'].includes(reaction.emoji.name)
@@ -26,79 +26,56 @@ function createRecruitParty(date, time, boss, text) {
             name: `\u200B`,
 			value: `${text}`
         }, 
-        ).setFooter({text: '참여는 아래 ❤를 눌러주세요 [선착순 반영]'});
+        ).setFooter({ text : '참여는 아래 ❤를 눌러주세요 [선착순 반영]'});
 
     return embed;
 }
-function createFinishParty() {
+function createFinishParty(content) {
 	const embed = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('**`[아발론 정화 파티원 구인]`**')
         .addFields({
             name: '**모집완료**',
-            value: '\u200B'
+            value: content
         });
     return embed;
 };
 
 function createCollector(message, interaction) {
-	const collector = message.createReactionCollector({filter, max: 99, dispose: true});
-	const attack = [];
-    const support = [];
+	const collector = message.createReactionCollector({ filter, max: 99, dispose: true });
+	const attack = new Set();
+	const support = new Set();
 
 	collector.on('collect', (reaction, user) => {
+		if (user.tag === '업타운#9665') return;
 
-		if (user.tag !== '업타운#9665') {
-			console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
-			switch (reaction.emoji.name) {
-                case '❤️':
-                    attack.push(user.id);
-                    break;
-            
-                case '🧡':
-                    support.push(user.id);
-                    break;
+		if (reaction.emoji.name === '❤️') {
+			attack.add(user.id);
+		} else if (reaction.emoji.name === '🧡') {
+			support.add(user.id);
+		} else if (reaction.emoji.name === '🛑' && user.tag === interaction.user.tag) {
+			const attackers = Array.from(attack).map(item => `<@${item}>`).join(' ');
+            const supporters = Array.from(support).map(item => `<@${item}>`).join(' ');
 
-                case '🛑':
-                    if(user.tag === interaction.user.tag) {
-                        var attackers = '';
-                        attack.forEach((item) => {
-                            attackers += `<@${item}> `
-                        });
-                        var supporters = '';
-                        support.forEach((item) => {
-                            supporters += `<@${item}> `
-                        });
-        
-                        interaction.followUp({content : `딜러 : ${attackers} \n서포터 : ${supporters}`, embeds: [createFinishParty()]});
-                        collector.stop();
-                    }
-                    break;
+            interaction.channel.send({
+				embeds: [createFinishParty(`딜러 : ${attackers} \n서포터 : ${supporters}`)]
+			});
 
-            }
-    	}
+			collector.stop();
+		}
 	});
 
 	collector.on('remove', (reaction, user) => {
-    	if (reaction.emoji.name === '❤️') {
-        	attack.forEach((item, index) => {
-            	if (user.id == item) {
-                	attack.splice(index, 1);
-            	}
-        	});
-    	}
-        if (reaction.emoji.name === '🧡') {
-        	support.forEach((item, index) => {
-            	if (user.id == item) {
-                	support.splice(index, 1);
-            	}
-        	});
-    	}
-    	console.log(attack + support)
+		if (reaction.emoji.name === '❤️') {
+			attack.delete(user.id);
+		} else if (reaction.emoji.name === '🧡') {
+			support.delete(user.id);
+		}
+		console.log(attack, support);
 	});
-	return collector;
-};
 
+	return collector;
+}
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -128,6 +105,7 @@ module.exports = {
                 message.react('❤️').then(() => message.react('🧡')).then(() => message.react('🛑'));
                 createCollector(message, interaction);
             })
-        
+
+		
     }
 };
