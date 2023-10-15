@@ -22,16 +22,14 @@ const rest = new REST({ version: '10' }).setToken(token);
 (async () => {
 	guildIds.map(async(guildId) => {
 		try {
-			await rest.put(
-				Routes.applicationGuildCommands(clientId, guildId), { 
-					body: commands 
-				});
-				console.log(`Started refreshing ${commands.length} application (/) commands.`);
-				const data = await rest.put(
-				Routes.applicationGuildCommands(clientId, guildId), { 
-					body: commands,
-				});
-				console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+			await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
+			.then(() => console.log('Successfully deleted all guild commands.'))
+			.catch(console.error);
+		
+		// for global commands
+		rest.put(Routes.applicationCommands(clientId), { body: [] })
+			.then(() => console.log('Successfully deleted all application commands.'))
+			.catch(console.error);
 		} catch (error) {
 			console.error(error);
 		}

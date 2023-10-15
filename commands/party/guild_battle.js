@@ -16,6 +16,9 @@ module.exports = {
 
 		const embed1 = new EmbedBuilder()
 			.setColor(0x0099FF)
+			.setAuthor({
+				name: `${interaction.user.id}`
+			})
 			.setTitle(`**\`[${date1} 던바튼 길드원 모집 ]\`**`)
 			.setDescription(`**모집 기간 : ${date2} 까지 모집**`)
 			.addFields(

@@ -25,6 +25,9 @@ module.exports = {
 		.setColor(0x0099FF)
 		.setTitle('**`[아발론 정화 파티원 구인]`**')
 		.setDescription(`**일시 : ${date} ${time}**`)
+        .setAuthor({
+            name: `${interaction.user.id}`
+        })
 		.addFields(
             { name: '**`타겟 보스`**', value: boss, inline: true }, 
             { name: '**`딜러 모집 조건`**', value: '맥 1250 ⬆️', inline: true }, 

@@ -37,7 +37,7 @@ module.exports = {
                 });
             }
 
-           client.distube.play(voiceChannel, query, { textChannel: channel, member: member }).catch(err => handleError(err, interaction, createEmbed));
+           client.distube.play(voiceChannel, query, { textChannel: channel, member: member }).catch(err => console.log(err));
            return interaction.reply({ content: "🎶 재생목록에 추가되었습니다." });
           
         } catch (error) {

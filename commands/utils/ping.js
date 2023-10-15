@@ -15,6 +15,7 @@ module.exports = {
 				options: [
 					{ label: '교역', value: '교역' },
 					{ label: '정화', value: '정화' },
+					{ label: '테흐', value: '테흐' },
 					{ label: '하시딤', value: '하시딤' },
 					{ label: '크롬30', value: '크롬30' },
 					{ label: '크롬100', value: '크롬100' },

@@ -16,6 +16,9 @@ module.exports = {
 
         let embed1 = new EmbedBuilder()
         .setColor(0x0099FF)
+        .setAuthor({
+            name: `${interaction.user.id}`
+        })
         .setTitle('**`[글렌 쉬움 파티원 구인]`**')
         .setDescription(`**일시 : ${date} ${time}**`)
         .addFields(

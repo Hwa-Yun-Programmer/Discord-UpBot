@@ -14,8 +14,14 @@ module.exports = {
 		const text = interaction.options.getString('메모') ?? '\u200B';
 		const role = interaction.guild.roles.cache.find(role => role.name == "교역");
 
+		console.log(interaction.user)
+
 		const embed1 = new EmbedBuilder()
 			.setColor(0x0099FF)
+			.setAuthor({
+				name: `${interaction.user.username}`,
+				iconURL: interaction.user.avatarURL(),
+			})
 			.setTitle('**`[항공 교역 상단원 모집]`**')
 			.setDescription(`**일시 : ${date} ${time}**`)
 			.addFields(

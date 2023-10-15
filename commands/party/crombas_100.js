@@ -17,17 +17,24 @@ module.exports = {
         let embed1 = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('**`[크롬바스 100 파티원 구인]`**')
+        .setAuthor({
+            name: `${interaction.user.id}`
+        })
         .setDescription(`**일시 : ${date} ${time}**`)
         .addFields(
-            { name: '실린더 에르그 45 이상 / 주딜 맥 1350이상', value: `\n` }, 
-            { name: `${text}`, value: `${role}` }, 
-            { name: '**`세인트 바드`**', value: '50레벨 ⬆️', inline: true }, 
-			{ name: '**`주딜 조건`**', value: '맥 1350 ⬆️', inline: true },
-			{ name: '\u200B', value: '\u200B', inline: true},
-            { name: '**`특성`**', value: '프라 10렙', inline: true }, 
-            { name: '**`특성`**', value: '상지 10렙', inline: true },
-			{ name: '\u200B', value: '\u200B', inline: true},
-        ).setFooter({text: '참여는 아래 버튼을 눌러주세요 [선착순 반영]'});
+            { name: '**`공통 사항`**', value: `\u200B` },
+            { name: '**`실린더`**', value: 'S에르그 50', inline: true },
+            { name: '**`아르카나`**', value: '10개방', inline: true },
+            { name: '**`특성`**', value: '프라가라흐 10레벨', inline: true },
+            { name: `${text}`, value: `\u200B` }, 
+            { name: '**`상세사항`** - 하단의 아르카나 상세 맥 확인', value: `\u200B` }, 
+            { name: '**`딜  러`**', value: '주딜[너클/랜스 1400 ⬆️ (권장1450 ⬆️) or 활 피5 1550 ⬆️ \n\n ', inline: false }, 
+            { name: '**`서포터`**', value: '전장 47퍼 ⬆️ / 인형 S50 / 바드 10개방 ', inline: false }, 
+            { name: `\u200B`, value: `\u200B` }, 
+            { name: '**`엘레멘탈 나이트`**', value: '피어싱4 / 맥 1700 ⬆️', inline: true }, 
+			{ name: '**`알케믹 스팅어`**', value: '피어싱5 / 맥 1650 ⬆️', inline: true },
+			{ name: '**`다크 메이지 (풀도핑)`**', value: '원드 1450 / 스태프 1500 ⬆️', inline: true},
+        ).setFooter({text: '⁂ 엘나/알스/닼메 등 아르카나 개방 레벨이 10 미만일 경우에는 바드로 와주시기 바랍니다. 위의 기준은 모집하는 파티장에 따라 달라질 수 있습니다.'});
 
         let embed2 = new EmbedBuilder()
 		.setColor(0x0099FF)
